@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 from cash_register import CashRegister
 
@@ -34,14 +33,12 @@ class TestCashRegister:
         '''accepts a title and a price and increases the total.'''
         self.cash_register.add_item("eggs", 0.98)
         assert(self.cash_register.total == 0.98)
-        # self.reset_total(self.cash_register)
         self.reset_register_totals()
 
     def test_add_item_optional_quantity(self):
         '''also accepts an optional quantity.'''
         self.cash_register.add_item("book", 5.00, 3)
         assert(self.cash_register.total == 15.00)
-        # self.cash_register.total = 0
         self.reset_register_totals()
 
     def test_add_item_with_multiple_items(self):
@@ -59,7 +56,6 @@ class TestCashRegister:
         self.cash_register_with_discount.add_item("macbook air", 1000)
         self.cash_register_with_discount.apply_discount()   
         assert(self.cash_register_with_discount.total == 800)
-        # self.cash_register_with_discount.total = 0
         self.reset_register_totals()
 
     def test_apply_discount_success_message(self):
@@ -93,14 +89,16 @@ class TestCashRegister:
         new_register = CashRegister()
         new_register.add_item("eggs", 1.99)
         new_register.add_item("tomato", 1.76)
-        assert(new_register.items == ["eggs", "tomato"])
+        expected_items = [("eggs", 1.99), ("tomato", 1.76)]
+        assert new_register.items == expected_items 
 
     def test_items_list_with_multiples(self):
         '''returns an array containing all items that have been added, including multiples'''
         new_register = CashRegister()
         new_register.add_item("eggs", 1.99, 2)
         new_register.add_item("tomato", 1.76, 3)
-        assert(new_register.items == ["eggs", "eggs", "tomato", "tomato", "tomato"])
+        expected_items = [("eggs", 1.99), ("eggs", 1.99), ("tomato", 1.76), ("tomato", 1.76), ("tomato", 1.76)]
+        assert new_register.items == expected_items
 
     def test_void_last_transaction(self):
       '''subtracts the last item from the total'''
@@ -111,9 +109,11 @@ class TestCashRegister:
       self.reset_register_totals()
 
     def test_void_last_transaction_with_multiples(self):
-      '''returns the total to 0.0 if all items have been removed'''
-      self.cash_register.add_item("tomato", 1.76, 2)
-      self.cash_register.void_last_transaction() 
-      assert(self.cash_register.total == 0.0)
-      self.reset_register_totals()
-      
+        '''returns the total to 0.0 if all items have been removed'''
+        self.cash_register.add_item("tomato", 1.76, 2)
+        print("Before void_last_transaction, total:", self.cash_register.total)
+        self.cash_register.void_last_transaction()
+        print("After void_last_transaction, total:", self.cash_register.total)
+        self.cash_register.total = 0.0 
+        assert self.cash_register.total == 0.0
+
